@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Computer Networks Practical — Complete Solutions</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --primary: #1a56db;
+      --primary-dark: #1e429f;
+      --accent: #0e9f6e;
+      --warning: #e3a008;
+      --danger: #f05252;
+      --bg: #f8faff;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --code-bg: #1e293b;
+      --code-text: #e2e8f0;
+      --highlight: #eff6ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 0;
+    }
+
+    /* ── COVER ── */
+    .cover {
+      background: linear-gradient(135deg, #1a56db 0%, #0e9f6e 100%);
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .cover-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .cover h1 {
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .cover p {
+      font-size: 16px;
+      opacity: 0.85;
+      max-width: 540px;
+      margin: 0 auto 30px;
+    }
+    .cover-meta {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    .cover-meta span {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin-bottom: 40px;
+    }
+    .toc h2 { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--primary); }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin-bottom: 8px; }
+    .toc a { color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; }
+    .toc a:hover { color: var(--primary); }
+    .toc .toc-num {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      text-align: center; line-height: 22px;
+      margin-right: 8px;
+    }
+
+    /* ── PRACTICAL CARD ── */
+    .practical {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 36px;
+      overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    }
+    .practical-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 28px;
+      background: linear-gradient(90deg, var(--highlight), white);
+      border-bottom: 1px solid var(--border);
+    }
+    .prac-num {
+      width: 44px; height: 44px;
+      background: var(--primary);
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .practical-header h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+    .practical-header .aim {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .practical-body { padding: 24px 28px; }
+
+    /* ── SECTION TITLES ── */
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 20px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title .icon { font-size: 16px; }
+
+    /* ── STEPS ── */
+    .steps { list-style: none; padding: 0; }
+    .steps li {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 26px; height: 26px;
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .steps li p { font-size: 14px; margin: 0; }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: var(--code-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 14px 0;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.07);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .code-header span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .code-dots { display: flex; gap: 5px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #f87171; }
+    .dot-y { background: #fbbf24; }
+    .dot-g { background: #34d399; }
+    pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--code-text);
+      padding: 16px 20px;
+      overflow-x: auto;
+      line-height: 1.8;
+      white-space: pre;
+    }
+    .kw { color: #7dd3fc; }   /* keyword */
+    .cm { color: #64748b; }   /* comment */
+    .st { color: #86efac; }   /* string */
+    .nm { color: #fda4af; }   /* number/ip */
+
+    /* ── TABLE ── */
+    .cmd-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+    .cmd-table th {
+      background: var(--primary);
+      color: white;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .cmd-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); }
+    .cmd-table tr:last-child td { border-bottom: none; }
+    .cmd-table tr:nth-child(even) td { background: var(--highlight); }
+    .cmd-table code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: #e0e7ff;
+      color: var(--primary-dark);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    /* ── CALLOUTS ── */
+    .callout {
+      display: flex;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      margin: 14px 0;
+      font-size: 14px;
+    }
+    .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .callout.tip { background: #ecfdf5; border-left: 4px solid #10b981; color: #065f46; }
+    .callout.note { background: #eff6ff; border-left: 4px solid #3b82f6; color: #1e3a8a; }
+    .callout.warn { background: #fffbeb; border-left: 4px solid #f59e0b; color: #78350f; }
+
+    /* ── TOPOLOGY GRID ── */
+    .topo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 14px 0; }
+    .topo-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .topo-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .topo-card p { font-size: 13px; color: var(--muted); }
+    .topo-bus h4 { color: #1d4ed8; }
+    .topo-ring h4 { color: #dc2626; }
+    .topo-tree h4 { color: #15803d; }
+    .topo-hybrid h4 { color: #b45309; }
+    .topo-mesh h4 { color: #6d28d9; }
+
+    /* ── CABLE TABLE ── */
+    .cable-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0; }
+    .cable-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .cable-straight { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+    .cable-cross { background: #fce7f3; color: #9d174d; border: 1px solid #fbcfe8; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+    }
+
+    @media print {
+      body { background: white; }
+      .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-badge">📡 Computer Networks Lab</div>
+  <h1>Complete Practical Solutions</h1>
+  <p>All 9 practicals with step-by-step instructions using Cisco Packet Tracer</p>
+  <div class="cover-meta">
+    <span>🛠 Tool: Cisco Packet Tracer</span>
+    <span>📋 9 Practicals</span>
+    <span>🎓 B.Tech / BCA / MCA</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc">
+    <h2>📑 Table of Contents</h2>
+    <ol style="list-style:none; padding:0; columns: 2; column-gap: 30px;">
+      <li style="margin-bottom:10px"><a href="#p1"><span class="toc-num">1</span>Basic Network & Config Commands</a></li>
+      <li style="margin-bottom:10px"><a href="#p2"><span class="toc-num">2</span>PC to PC Communication</a></li>
+      <li style="margin-bottom:10px"><a href="#p3"><span class="toc-num">3</span>Star Topology (Hub & Switch)</a></li>
+      <li style="margin-bottom:10px"><a href="#p4"><span class="toc-num">4</span>Bus, Ring, Tree, Hybrid, Mesh</a></li>
+      <li style="margin-bottom:10px"><a href="#p5"><span class="toc-num">5</span>Initial Switch Configuration</a></li>
+      <li style="margin-bottom:10px"><a href="#p6"><span class="toc-num">6</span>Initial Router Configuration</a></li>
+      <li style="margin-bottom:10px"><a href="#p7"><span class="toc-num">7</span>Client-Server Network</a></li>
+      <li style="margin-bottom:10px"><a href="#p8"><span class="toc-num">8</span>Devices Connected via Router</a></li>
+      <li style="margin-bottom:10px"><a href="#p9"><span class="toc-num">9</span>Remote Desktop Sharing (LAN)</a></li>
+    </ol>
+  </div>
+
+  <!-- ── PRACTICAL 1 ── -->
+  <div class="practical" id="p1">
+    <div class="practical-header">
+      <div class="prac-num">1</div>
+      <div>
+        <div class="aim">Practical 1</div>
+        <h2>Basic Network & Network Configuration Commands</h2>
+      </div>
+    </div>
+    <div class="practical-body">
+
+      <div class="section-title"><span class="icon">💻</span> Part A — Basic Network Commands (Windows CMD)</div>
+      <table class="cmd-table">
+        <tr><th>Command</th><th>Purpose</th></tr>
+        <tr><td><code>ipconfig</code></td><td>Displays IP address, Subnet Mask, Default Gateway</td></tr>
+        <tr><td><code>ipconfig /all</code></td><td>Full details including MAC address, DHCP status</td></tr>
+        <tr><td><code>ping 192.168.1.1</code></td><td>Tests connectivity to a target device</td></tr>
+        <tr><td><code>tracert 8.8.8.8</code></td><td>Traces the route packets take to a destination</td></tr>
+        <tr><td><code>netstat</code></td><td>Displays all active connections and ports</td></tr>
+        <tr><td><code>nslookup google.com</code></td><td>DNS lookup — resolves hostname to IP</td></tr>
+        <tr><td><code>arp -a</code></td><td>Shows ARP table (IP-to-MAC address mapping)</td></tr>
+        <tr><td><code>hostname</code></td><td>Shows the name of the current computer</td></tr>
+        <tr><td><code>netstat -an</code></td><td>Shows all ports listening and established</td></tr>
+        <tr><td><code>net view</code></td><td>Lists devices on the local network</td></tr>
+      </table>
+
+      <div class="section-title"><span class="icon">⚙️</span> Part B — Cisco Router/Switch CLI Commands</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <span>Cisco IOS CLI</span>
+        </div>
+        <pre><span class="cm"># Enter Privileged EXEC Mode</span>
+Router&gt; <span class="kw">enable</span>
+
+<span class="cm"># Enter Global Configuration Mode</span>
+Router# <span class="kw">configure terminal</span>
+
+<span class="cm"># Set Hostname</span>
+Router(config)# <span class="kw">hostname</span> R1
+
+<span class="cm"># Configure an Interface</span>
+R1(config)# <span class="kw">interface</span> fastEthernet 0/0
+R1(config-if)# <span class="kw">ip address</span> <span class="nm">192.168.1.1</span> <span class="nm">255.255.255.0</span>
+R1(config-if)# <span class="kw">no shutdown</span>
+R1(config-if)# <span class="kw">exit</span>
+
+<span class="cm"># Useful Show Commands</span>
+R1# <span class="kw">show ip interface brief</span>       <span class="cm">← View all interfaces + status</span>
+R1# <span class="kw">show running-config</span>           <span class="cm">← View full current config</span>
+R1# <span class="kw">show version</span>                  <span class="cm">← Hardware and IOS version</span>
+R1# <span class="kw">show ip route</span>                 <span class="cm">← View routing table</span>
+
+<span class="cm"># Save Configuration</span>
+R1# <span class="kw">write memory</span></pre>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PRACTICAL 2 ── -->
+  <div class="practical" id="p2">
+    <div class="practical-header">
+      <div class="prac-num">2</div>
+      <div>
+        <div class="aim">Practical 2</div>
+        <h2>PC to PC Communication</h2>
+      </div>
+    </div>
+    <div class="practical-body">
+
+      <div class="callout note">
+        <span class="callout-icon">📌</span>
+        <div>Two PCs connected directly to each other (without a switch) require a <strong>Cross-Over Cable</strong>. You are creating a direct peer-to-peer network.</div>
+      </div>
+
+      <div class="section-title"><span class="icon">🪜</span> Step-by-Step in Cisco Packet Tracer</div>
+      <ul class="steps">
+        <li><div class="step-num">1</div><p>Open Packet Tracer → Click <strong>End Devices</strong> panel → Drag <strong>2 PCs</strong> onto the workspace.</p></li>
+        <li><div class="step-num">2</div><p>Click <strong>Connections</strong> (lightning bolt icon) → Select <strong>Copper Cross-Over Cable</strong>.</p></li>
+        <li><div class="step-num">3</div><p>Click <strong>PC0</strong> → choose <strong>FastEthernet0</strong>, then click <strong>PC1</strong> → choose <strong>FastEthernet0</strong>. A green link light confirms connection.</p></li>
+        <li><div class="step-num">4</div><p>Click <strong>PC0</strong> → <strong>Desktop</strong> tab → <strong>IP Configuration</strong>:<br>IP Address: <code>192.168.1.1</code> &nbsp;|&nbsp; Subnet Mask: <code>255.255.255.0</code></p></li>
+        <li><div class="step-num">5</div><p>Click <strong>PC1</strong> → same path:<br>IP Address: <code>192.168.1.2</code> &nbsp;|&nbsp; Subnet Mask: <code>255.255.255.0</code></p></li>
+        <li><div class="step-num">6</div><p>Click <strong>PC0</strong> → Desktop → <strong>Command Prompt</strong> → Type the ping command below.</p></li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <span>PC0 — Command Prompt</span>
+        </div>
+        <pre>PC&gt; <span class="kw">ping</span> <span class="nm">192.168.1.2</span>
+
+<span class="st">Reply from 192.168.1.2: bytes=32 time&lt;1ms TTL=128
+Reply from 192.168.1.2: bytes=32 time&lt;1ms TTL=128
+Reply from 192.168.1.2: bytes=32 time&lt;1ms TTL=128
+Reply from 192.168.1.2: bytes=32 time&lt;1ms TTL=128
+✅ Communication Successful!</span></pre>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PRACTICAL 3 ── -->
+  <div class="practical" id="p3">
+    <div class="practical-header">
+      <div class="prac-num">3</div>
+      <div>
+        <div class="aim">Practical 3</div>
+        <h2>Star Topology using Hub and Switch</h2>
+      </div>
+    </div>
+    <div class="practical-body">
+
+      <div class="section-title"><span class="icon">⭐</span> Star Topology with HUB</div>
+      <ul class="steps">
+        <li><div class="step-num">1</div><p>Add <strong>4 PCs</strong> + <strong>1 Hub</strong> (from Network Devices → Hubs) to the workspace.</p></li>
+        <li><div class="step-num">2</div><p>Connect each PC to the Hub using a <strong>Straight-Through Cable</strong> (PC→Hub always uses straight-through).</p></li>
+        <li><div class="step-num">3</div><p>Assign IPs: PC0=<code>192.168.1.1</code>, PC1=<code>192.168.1.2</code>, PC2=<code>192.168.1.3</code>, PC3=<code>192.168.1.4</code> (same subnet mask <code>255.255.255.0</code>).</p></li>
+        <li><div class="step-num">4</div><p>Ping between any two PCs to verify. All should reply ✅</p></li>
+      </ul>
+
+      <div class="section-title"><span class="icon">🔀</span> Star Topology with SWITCH</div>
+      <ul class="steps">
+        <li><div class="step-num">1</div><p>Replace Hub with a <strong>Switch</strong> (Network Devices → Switches → 2960). All other steps are identical.</p></li>
+        <li><div class="step-num">2</div><p>Connect each PC to the Switch using <strong>Straight-Through Cable</strong>.</p></li>
+        <li><div class="step-num">3</div><p>Assign the same IPs as above and ping to test.</p></li>
+      </ul>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div><strong>Hub vs Switch:</strong> A Hub broadcasts data to ALL connected PCs (inefficient). A Switch learns MAC addresses and sends data ONLY to the intended PC — far more efficient and secure.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PRACTICAL 4 ── -->
+  <div class="practical" id="p4">
+    <div class="practical-header">
+      <div class="prac-num">4</div>
+      <div>
+        <div class="aim">Practical 4</div>
+        <h2>Bus, Ring, Tree, Hybrid, Mesh Topologies</h2>
+      </div>
+    </div>
+    <div class="practical-body">
+
+      <div class="topo-grid">
+        <div class="topo-card topo-bus">
+          <h4>🔵 Bus</h4>
+          <p>PCs in a line sharing one backbone cable. Use a Hub in a line or connect PCs through repeaters linearly.</p>
+        </div>
+        <div class="topo-card topo-ring">
+          <h4>🔴 Ring</h4>
+          <p>Each PC connects to the next forming a loop. PC1→PC2→PC3→PC4→back to PC1.</p>
+        </div>
+        <div class="topo-card topo-tree">
+          <h4>🟢 Tree</h4>
+          <p>Root switch connects to sub-switches, each with PCs attached. Hierarchical star.</p>
+        </div>
+        <div class="topo-card topo-hybrid">
+          <h4>🟡 Hybrid</h4>
+          <p>Mix of two topologies (e.g., two Star networks connected via a Bus link between switches).</p>
+        </div>
+        <div class="topo-card topo-mesh">
+          <h4>🟣 Mesh</h4>
+          <p>Every router connects to every other. 4 nodes = 6 connections. Formula: n×(n-1)/2.</p>
+        </div>
+      </div>
+
+      <div class="section-title"><span class="icon">🪜</span> How to Build Each in Packet Tracer</div>
+
+      <p style="font-size:14px; font-weight:600; margin: 14px 0 6px;">🔵 Bus Topology:</p>
+      <ul class="steps">
+        <li><div class="step-num">1</div><p>Add 4 PCs + 1 Hub. Connect PC1→Hub1, PC2→Hub1, Hub1→Hub2, PC3→Hub2, PC4→Hub2 in a linear chain.</p></li>
+        <li><div class="step-num">2</div><p>Assign IPs in the same subnet. Ping to test.</p></li>
+      </ul>
+
+      <p style="font-size:14px; font-weight:600; margin: 14px 0 6px;">🔴 Ring Topology:</p>
+      <ul class="steps">
+        <li><div class="step-num">1</div><p>Add 4 PCs. Use <strong>Cross-Over Cables</strong> to connect PC0→PC1→PC2→PC3→back to PC0.</p></li>
+        <li><div class="step-num">2</div><p>Assign IPs. Note: In Packet Tracer, each PC has one NIC so ring is simulated logically.</p></li>
+      </ul>
+
+      <p style="font-size:14px; font-weight:600; margin: 14px 0 6px;">🟢 Tree Topology:</p>
+      <ul class="steps">
+        <li><div class="step-num">1</div><p>Add 1 Root Switch + 2 Sub-Switches. Connect Root→Sub1 and Root→Sub2 with Straight-Through cables.</p></li>
+        <li><div class="step-num">2</div><p>Add 2-3 PCs to each sub-switch. Assign IPs in same subnet.</p></li>
+      </ul>
+
+      <p style="font-size:14px; font-weight:600; margin: 14px 0 6px;">🟣 Mesh Topology:</p>
+      <ul class="steps">
+        <li><div class="step-num">1</div><p>Add 4 Routers. Connect R1↔R2, R1↔R3, R1↔R4, R2↔R3, R2↔R4, R3↔R4 (6 total connections).</p></li>
+        <li><div class="step-num">2</div><p>Assign a unique IP to each interface. Configure routes as needed.</p></li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── PRACTICAL 5 ── -->
+  <div class="practical" id="p5">
+    <div class="practical-header">
+      <div class="prac-num">5</div>
+      <div>
+        <div class="aim">Practical 5</div>
+        <h2>Initial Switch Configuration</h2>
+      </div>
+    </div>
+    <div class="practical-body">
+
+      <div class="callout note">
+        <span class="callout-icon">📌</span>
+        <div>Click the Switch → <strong>CLI tab</strong> in Packet Tracer. Press Enter to begin, then type the commands below.</div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <span>Switch CLI — Initial Configuration</span>
+        </div>
+        <pre><span class="cm"># Enter privileged mode</span>
+Switch&gt; <span class="kw">enable</span>
+Switch# <span class="kw">configure terminal</span>
+
+<span class="cm"># Set hostname</span>
+Switch(config)# <span class="kw">hostname</span> SW1
+
+<span class="cm"># Set enable password (to protect privileged mode)</span>
+SW1(config)# <span class="kw">enable password</span> <span class="st">cisco123</span>
+
+<span class="cm"># Set console line password</span>
+SW1(config)# <span class="kw">line console</span> 0
+SW1(config-line)# <span class="kw">password</span> <span class="st">console123</span>
+SW1(config-line)# <span class="kw">login</span>
+SW1(config-line)# <span class="kw">exit</span>
+
+<span class="cm"># Set VTY (Telnet) password</span>
+SW1(config)# <span class="kw">line vty</span> 0 4
+SW1(config-line)# <span class="kw">password</span> <span class="st">telnet123</span>
+SW1(config-line)# <span class="kw">login</span>
+SW1(config-line)# <span class="kw">exit</span>
+
+<span class="cm"># Set login banner message</span>
+SW1(config)# <span class="kw">banner motd</span> #Authorized Access Only!#
+
+<span class="cm"># Assign management IP to VLAN 1 interface</span>
+SW1(config)# <span class="kw">interface vlan</span> 1
+SW1(config-if)# <span class="kw">ip address</span> <span class="nm">192.168.1.2</span> <span class="nm">255.255.255.0</span>
+SW1(config-if)# <span class="kw">no shutdown</span>
+SW1(config-if)# <span class="kw">exit</span>
+
+<span class="cm"># Disable unused ports for security</span>
+SW1(config)# <span class="kw">interface range</span> fa0/5 - 24
+SW1(config-if-range)# <span class="kw">shutdown</span>
+SW1(config-if-range)# <span class="kw">exit</span>
+
+<span class="cm"># Save configuration</span>
+SW1# <span class="kw">write memory</span>
+SW1# <span class="kw">show running-config</span>        <span class="cm">← Verify all settings</span></pre>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PRACTICAL 6 ── -->
+  <div class="practical" id="p6">
+    <div class="practical-header">
+      <div class="prac-num">6</div>
+      <div>
+        <div class="aim">Practical 6</div>
+        <h2>Initial Router Configuration</h2>
+      </div>
+    </div>
+    <div class="practical-body">
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <span>Router CLI — Initial Configuration</span>
+        </div>
+        <pre><span class="cm"># Enter privileged and config mode</span>
+Router&gt; <span class="kw">enable</span>
+Router# <span class="kw">configure terminal</span>
+
+<span class="cm"># Set hostname</span>
+Router(config)# <span class="kw">hostname</span> R1
+
+<span class="cm"># Set encrypted enable password</span>
+R1(config)# <span class="kw">enable secret</span> <span class="st">mypassword</span>
+
+<span class="cm"># Configure LAN-facing interface (Gig0/0)</span>
+R1(config)# <span class="kw">interface</span> GigabitEthernet0/0
+R1(config-if)# <span class="kw">ip address</span> <span class="nm">192.168.1.1</span> <span class="nm">255.255.255.0</span>
+R1(config-if)# <span class="kw">no shutdown</span>
+R1(config-if)# <span class="kw">exit</span>
+
+<span class="cm"># Configure WAN-facing interface (Gig0/1)</span>
+R1(config)# <span class="kw">interface</span> GigabitEthernet0/1
+R1(config-if)# <span class="kw">ip address</span> <span class="nm">10.0.0.1</span> <span class="nm">255.255.255.0</span>
+R1(config-if)# <span class="kw">no shutdown</span>
+R1(config-if)# <span class="kw">exit</span>
+
+<span class="cm"># Console password</span>
+R1(config)# <span class="kw">line console</span> 0
+R1(config-line)# <span class="kw">password</span> <span class="st">routerpass</span>
+R1(config-line)# <span class="kw">login</span>
+R1(config-line)# <span class="kw">exit</span>
+
+<span class="cm"># Telnet (VTY) password</span>
+R1(config)# <span class="kw">line vty</span> 0 4
+R1(config-line)# <span class="kw">password</span> <span class="st">vtypass</span>
+R1(config-line)# <span class="kw">login</span>
+R1(config-line)# <span class="kw">exit</span>
+
+<span class="cm"># Save config</span>
+R1# <span class="kw">write memory</span>
+R1# <span class="kw">show ip interface brief</span>       <span class="cm">← Both interfaces should show "up"</span></pre>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PRACTICAL 7 ── -->
+  <div class="practical" id="p7">
+    <div class="practical-header">
+      <div class="prac-num">7</div>
+      <div>
+        <div class="aim">Practical 7</div>
+        <h2>Client-Server Network</h2>
+      </div>
+    </div>
+    <div class="practical-body">
+
+      <div class="section-title"><span class="icon">🌐</span> Network Layout</div>
+      <div class="callout note">
+        <span class="callout-icon">📌</span>
+        <div>1 Server + 3 PCs (clients) + 1 Switch. Server hosts HTTP website + DHCP to auto-assign IPs to clients.</div>
+      </div>
+
+      <ul class="steps">
+        <li><div class="step-num">1</div><p>Add <strong>1 Server</strong> (End Devices → Server), <strong>3 PCs</strong>, and <strong>1 Switch</strong>. Connect all devices to the Switch using Straight-Through cables.</p></li>
+        <li><div class="step-num">2</div><p>Click <strong>Server</strong> → Desktop → IP Configuration → Set manually:<br>IP: <code>192.168.1.100</code> | Mask: <code>255.255.255.0</code> | Gateway: <code>192.168.1.100</code></p></li>
+        <li><div class="step-num">3</div><p>Click <strong>Server</strong> → <strong>Services</strong> tab → <strong>DHCP</strong> → Toggle to <strong>ON</strong>. Set: Default Gateway = <code>192.168.1.100</code>, Start IP = <code>192.168.1.1</code>, Max Users = 50. Click <strong>Save</strong>.</p></li>
+        <li><div class="step-num">4</div><p>Also in Services → <strong>HTTP</strong> → Toggle to <strong>ON</strong>. The default webpage is already set.</p></li>
+        <li><div class="step-num">5</div><p>On each PC → Desktop → IP Configuration → Select <strong>DHCP</strong>. The PC will automatically receive an IP from the server ✅</p></li>
+        <li><div class="step-num">6</div><p>On any PC → Desktop → <strong>Web Browser</strong> → Type <code>192.168.1.100</code> in address bar → The server's default webpage loads ✅</p></li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── PRACTICAL 8 ── -->
+  <div class="practical" id="p8">
+    <div class="practical-header">
+      <div class="prac-num">8</div>
+      <div>
+        <div class="aim">Practical 8</div>
+        <h2>Connection Between Devices Using a Router</h2>
+      </div>
+    </div>
+    <div class="practical-body">
+
+      <div class="callout note">
+        <span class="callout-icon">📌</span>
+        <div>Two separate networks (<code>192.168.1.0/24</code> and <code>192.168.2.0/24</code>) connected through one Router. The router acts as the gateway between them.</div>
+      </div>
+
+      <div class="section-title"><span class="icon">🪜</span> Steps in Packet Tracer</div>
+      <ul class="steps">
+        <li><div class="step-num">1</div><p>Add: <strong>2 PCs</strong>, <strong>2 Switches</strong>, <strong>1 Router</strong> (Routers → 2911).</p></li>
+        <li><div class="step-num">2</div><p>Connect: <code>PC0 → Switch0 → Router (Gig0/0)</code> using Straight-Through cables.</p></li>
+        <li><div class="step-num">3</div><p>Connect: <code>PC1 → Switch1 → Router (Gig0/1)</code> using Straight-Through cables.</p></li>
+        <li><div class="step-num">4</div><p>Configure the Router CLI (see code below).</p></li>
+        <li><div class="step-num">5</div><p><strong>PC0 config:</strong> IP=<code>192.168.1.2</code> | Mask=<code>255.255.255.0</code> | Gateway=<code>192.168.1.1</code></p></li>
+        <li><div class="step-num">6</div><p><strong>PC1 config:</strong> IP=<code>192.168.2.2</code> | Mask=<code>255.255.255.0</code> | Gateway=<code>192.168.2.1</code></p></li>
+        <li><div class="step-num">7</div><p>From PC0 → Command Prompt → <code>ping 192.168.2.2</code> → ✅ Replies confirm inter-network routing works!</p></li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <span>Router CLI — Inter-Network Routing</span>
+        </div>
+        <pre><span class="cm"># Interface towards Network 1</span>
+Router(config)# <span class="kw">interface</span> GigabitEthernet0/0
+Router(config-if)# <span class="kw">ip address</span> <span class="nm">192.168.1.1</span> <span class="nm">255.255.255.0</span>
+Router(config-if)# <span class="kw">no shutdown</span>
+Router(config-if)# <span class="kw">exit</span>
+
+<span class="cm"># Interface towards Network 2</span>
+Router(config)# <span class="kw">interface</span> GigabitEthernet0/1
+Router(config-if)# <span class="kw">ip address</span> <span class="nm">192.168.2.1</span> <span class="nm">255.255.255.0</span>
+Router(config-if)# <span class="kw">no shutdown</span>
+Router(config-if)# <span class="kw">exit</span>
+
+<span class="cm"># Save and verify</span>
+Router# <span class="kw">write memory</span>
+Router# <span class="kw">show ip route</span>    <span class="cm">← Should show both C 192.168.1.0 and C 192.168.2.0</span></pre>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PRACTICAL 9 ── -->
+  <div class="practical" id="p9">
+    <div class="practical-header">
+      <div class="prac-num">9</div>
+      <div>
+        <div class="aim">Practical 9</div>
+        <h2>Remote Desktop Sharing within LAN Connection</h2>
+      </div>
+    </div>
+    <div class="practical-body">
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div>Packet Tracer does not support actual RDP (port 3389). <strong>Telnet</strong> is used to simulate remote access in Packet Tracer. For real-world RDP steps, see Part B below.</div>
+      </div>
+
+      <div class="section-title"><span class="icon">🖥</span> Part A — Telnet Remote Access (Packet Tracer Simulation)</div>
+      <ul class="steps">
+        <li><div class="step-num">1</div><p>Build a LAN: 2 PCs connected to a Switch. Assign IPs: PC0=<code>192.168.1.10</code>, PC1=<code>192.168.1.20</code>, Mask=<code>255.255.255.0</code>.</p></li>
+        <li><div class="step-num">2</div><p>Add a Router or Switch to serve as the remote device. Configure Telnet on it (see CLI below).</p></li>
+        <li><div class="step-num">3</div><p>From PC0 → Desktop → Command Prompt → Type: <code>telnet 192.168.1.20</code></p></li>
+        <li><div class="step-num">4</div><p>Enter the password when prompted → You are now remotely logged in ✅</p></li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <span>Switch/Router CLI — Enable Telnet</span>
+        </div>
+        <pre><span class="cm"># Set management IP</span>
+Switch(config)# <span class="kw">interface vlan</span> 1
+Switch(config-if)# <span class="kw">ip address</span> <span class="nm">192.168.1.20</span> <span class="nm">255.255.255.0</span>
+Switch(config-if)# <span class="kw">no shutdown</span>
+Switch(config-if)# <span class="kw">exit</span>
+
+<span class="cm"># Enable Telnet on VTY lines</span>
+Switch(config)# <span class="kw">line vty</span> 0 4
+Switch(config-line)# <span class="kw">password</span> <span class="st">telnetpass</span>
+Switch(config-line)# <span class="kw">login</span>
+Switch(config-line)# <span class="kw">exit</span>
+
+Switch(config)# <span class="kw">enable password</span> <span class="st">admin</span>
+Switch# <span class="kw">write memory</span>
+
+<span class="cm"># From PC0 Command Prompt:</span>
+PC&gt; <span class="kw">telnet</span> <span class="nm">192.168.1.20</span>
+<span class="st">Password: telnetpass</span>
+SW1&gt;    <span class="cm">← Remote access successful!</span></pre>
+      </div>
+
+      <div class="section-title"><span class="icon">🪟</span> Part B — Real Windows Remote Desktop (RDP) Steps</div>
+      <ul class="steps">
+        <li><div class="step-num">1</div><p>On the <strong>target PC</strong>: Right-click <em>This PC</em> → <em>Properties</em> → <em>Remote settings</em> → Enable <strong>"Allow remote connections"</strong>.</p></li>
+        <li><div class="step-num">2</div><p>Note the target PC's IP address using <code>ipconfig</code> in CMD.</p></li>
+        <li><div class="step-num">3</div><p>On the <strong>source PC</strong>: Press <code>Win + R</code> → type <code>mstsc</code> → Enter.</p></li>
+        <li><div class="step-num">4</div><p>In the Remote Desktop window → Enter the target PC's IP address → Click <strong>Connect</strong>.</p></li>
+        <li><div class="step-num">5</div><p>Enter the target PC's username and password → ✅ Remote desktop session opens!</p></li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- CABLE REFERENCE -->
+  <div class="practical">
+    <div class="practical-header">
+      <div class="prac-num" style="background:#10b981">💡</div>
+      <div>
+        <div class="aim">Quick Reference</div>
+        <h2>Cable Types & Tips</h2>
+      </div>
+    </div>
+    <div class="practical-body">
+      <div class="section-title"><span class="icon">🔌</span> Which Cable to Use?</div>
+      <table class="cmd-table">
+        <tr><th>Connection</th><th>Cable Type</th></tr>
+        <tr><td>PC ↔ Switch</td><td>✅ Straight-Through</td></tr>
+        <tr><td>PC ↔ Router</td><td>✅ Straight-Through</td></tr>
+        <tr><td>Switch ↔ Router</td><td>✅ Straight-Through</td></tr>
+        <tr><td>PC ↔ PC (direct)</td><td>🔀 Cross-Over</td></tr>
+        <tr><td>Switch ↔ Switch</td><td>🔀 Cross-Over</td></tr>
+        <tr><td>Router ↔ Router</td><td>🔀 Cross-Over or Serial DCE/DTE</td></tr>
+      </table>
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div>In newer versions of Packet Tracer, use the <strong>"Automatic" cable</strong> — it picks the correct type automatically! Always save your <code>.pkt</code> file after each practical. Use <code>show running-config</code> to verify any router/switch configuration.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  Computer Networks Lab Manual &nbsp;·&nbsp; Cisco Packet Tracer &nbsp;·&nbsp; All 9 Practicals Covered
+</footer>
+
+</body>
+</html>

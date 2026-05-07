@@ -1,0 +1,27 @@
+1. Essential Networking Packages to Install
+
+Update packages first:
+
+sudo apt update && sudo apt upgrade -y
+
+Now install the important networking tools:
+
+sudo apt install -y \
+net-tools \
+iproute2 \
+dnsutils \
+iputils-ping \
+traceroute \
+nmap \
+tcpdump \
+wireshark \
+curl \
+wget \
+netcat-openbsd \
+openssh-client \
+openssh-server \
+ethtool \
+iftop \
+nethogs \
+mtr \
+whois

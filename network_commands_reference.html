@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Network & System Commands Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --surface:#111827;
+  --surface2:#1a2235;
+  --border:#1f2d45;
+  --win:#3b82f6;
+  --win-dim:#1d4ed8;
+  --win-glow:rgba(59,130,246,0.15);
+  --lux:#a855f7;
+  --lux-dim:#7c3aed;
+  --lux-glow:rgba(168,85,247,0.15);
+  --accent:#f59e0b;
+  --accent-glow:rgba(245,158,11,0.15);
+  --green:#22c55e;
+  --red:#f87171;
+  --text:#e2e8f0;
+  --muted:#64748b;
+  --muted2:#94a3b8;
+  --tag-bg:#0f172a;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Syne',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* grid bg */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(59,130,246,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(59,130,246,0.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;z-index:0;
+}
+
+/* ── HERO ────────────────────────── */
+.hero{
+  position:relative;
+  padding:70px 40px 60px;
+  text-align:center;
+  overflow:hidden;
+}
+.hero::after{
+  content:'';
+  position:absolute;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(59,130,246,0.12),transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-60%);
+  pointer-events:none;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(245,158,11,0.1);
+  border:1px solid rgba(245,158,11,0.3);
+  color:var(--accent);
+  font-family:'Space Mono',monospace;
+  font-size:11px;letter-spacing:2px;
+  padding:6px 16px;border-radius:999px;
+  margin-bottom:24px;
+}
+.hero h1{
+  font-size:clamp(32px,5vw,58px);
+  font-weight:800;
+  line-height:1.1;
+  margin-bottom:16px;
+  background:linear-gradient(135deg,#e2e8f0 30%,#3b82f6 70%,#a855f7);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero p{
+  font-size:16px;color:var(--muted2);
+  max-width:560px;margin:0 auto 40px;
+  line-height:1.7;
+}
+.hero-pills{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:10px;
+}
+.pill{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 18px;border-radius:8px;
+  font-size:13px;font-weight:600;
+  font-family:'Space Mono',monospace;
+}
+.pill-win{background:var(--win-glow);border:1px solid rgba(59,130,246,0.3);color:var(--win);}
+.pill-lux{background:var(--lux-glow);border:1px solid rgba(168,85,247,0.3);color:var(--lux);}
+
+/* ── TOC ─────────────────────────── */
+.toc-wrap{
+  max-width:1100px;margin:0 auto 50px;padding:0 24px;
+}
+.toc{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-top:3px solid var(--accent);
+  border-radius:12px;
+  padding:28px 32px;
+}
+.toc h2{
+  font-size:13px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);
+  margin-bottom:20px;font-family:'Space Mono',monospace;
+}
+.toc-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:8px;
+}
+.toc-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:8px;
+  background:var(--tag-bg);
+  border:1px solid var(--border);
+  text-decoration:none;
+  transition:all .2s;
+  cursor:pointer;
+}
+.toc-item:hover{border-color:var(--win);background:var(--win-glow);}
+.toc-num{
+  width:22px;height:22px;
+  background:var(--win);color:#fff;
+  font-size:10px;font-weight:700;
+  border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Mono',monospace;
+  flex-shrink:0;
+}
+.toc-label{font-size:13px;font-weight:600;color:var(--muted2);}
+.toc-label code{
+  font-family:'Space Mono',monospace;
+  font-size:12px;color:var(--win);
+}
+
+/* ── MAIN GRID ───────────────────── */
+.main{max-width:1100px;margin:0 auto;padding:0 24px 80px;}
+
+/* ── COMMAND CARD ────────────────── */
+.cmd-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  margin-bottom:32px;
+  overflow:hidden;
+  position:relative;
+  transition:border-color .2s;
+}
+.cmd-card:hover{border-color:rgba(59,130,246,0.3);}
+.cmd-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--win),var(--lux));
+}
+
+/* card header */
+.card-head{
+  display:flex;align-items:center;flex-wrap:wrap;gap:14px;
+  padding:22px 28px 20px;
+  border-bottom:1px solid var(--border);
+  background:var(--surface2);
+}
+.cmd-number{
+  font-family:'Space Mono',monospace;
+  font-size:11px;color:var(--muted);
+  background:var(--tag-bg);
+  border:1px solid var(--border);
+  padding:3px 9px;border-radius:5px;
+  flex-shrink:0;
+}
+.cmd-title{
+  font-size:20px;font-weight:800;
+  color:#fff;flex:1;
+}
+.os-badges{display:flex;gap:8px;flex-wrap:wrap;}
+.badge{
+  font-family:'Space Mono',monospace;
+  font-size:11px;font-weight:700;
+  padding:4px 12px;border-radius:999px;
+  letter-spacing:.5px;
+}
+.badge-win{background:var(--win-glow);border:1px solid rgba(59,130,246,0.4);color:var(--win);}
+.badge-lux{background:var(--lux-glow);border:1px solid rgba(168,85,247,0.4);color:var(--lux);}
+.badge-both{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:var(--green);}
+
+/* card body */
+.card-body{padding:24px 28px;}
+
+.what-is{
+  font-size:15px;line-height:1.75;
+  color:var(--muted2);margin-bottom:22px;
+  padding-left:14px;
+  border-left:3px solid var(--accent);
+}
+
+/* two-col layout */
+.os-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:20px;
+}
+@media(max-width:700px){.os-grid{grid-template-columns:1fr;}}
+
+.os-col{
+  border-radius:10px;
+  overflow:hidden;
+  border:1px solid var(--border);
+}
+.os-col-head{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;
+  font-family:'Space Mono',monospace;
+  font-size:11px;font-weight:700;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+}
+.win-head{background:rgba(59,130,246,0.12);color:var(--win);border-bottom:1px solid rgba(59,130,246,0.2);}
+.lux-head{background:rgba(168,85,247,0.12);color:var(--lux);border-bottom:1px solid rgba(168,85,247,0.2);}
+.os-col-body{padding:14px;background:var(--tag-bg);}
+
+/* code in card */
+pre{
+  font-family:'Space Mono',monospace;
+  font-size:12.5px;
+  line-height:1.85;
+  color:#c4d4f0;
+  white-space:pre-wrap;
+  word-break:break-all;
+}
+.c{color:var(--muted);}      /* comment */
+.kw{color:#7dd3fc;}           /* keyword/cmd */
+.flag{color:#fbbf24;}         /* flag */
+.ip{color:#f9a8d4;}           /* ip/value */
+.ok{color:#86efac;}           /* ok output */
+.err{color:#fca5a5;}          /* error/warning */
+
+/* use-cases section */
+.use-section{margin-top:18px;}
+.use-label{
+  font-size:10px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);
+  font-family:'Space Mono',monospace;
+  margin-bottom:10px;
+}
+.use-grid{
+  display:flex;flex-wrap:wrap;gap:8px;
+}
+.use-tag{
+  font-size:12px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  color:var(--muted2);
+  padding:5px 12px;border-radius:6px;
+  font-weight:600;
+}
+
+/* options table */
+.opt-table{
+  width:100%;border-collapse:collapse;
+  margin-top:16px;font-size:13px;
+}
+.opt-table th{
+  text-align:left;padding:8px 12px;
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:1px;
+  text-transform:uppercase;color:var(--muted);
+  border-bottom:1px solid var(--border);
+}
+.opt-table td{padding:9px 12px;border-bottom:1px solid rgba(31,45,69,0.6);}
+.opt-table tr:last-child td{border-bottom:none;}
+.opt-table td:first-child{
+  font-family:'Space Mono',monospace;
+  font-size:12px;color:#fbbf24;
+  white-space:nowrap;
+}
+.opt-table td:nth-child(2){color:var(--muted2);}
+
+/* divider */
+.divider{
+  height:1px;background:var(--border);margin:18px 0;
+}
+
+/* tip box */
+.tip-box{
+  display:flex;gap:10px;
+  background:rgba(245,158,11,0.07);
+  border:1px solid rgba(245,158,11,0.2);
+  border-radius:8px;
+  padding:12px 16px;margin-top:16px;
+  font-size:13px;line-height:1.6;color:var(--muted2);
+}
+.tip-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+
+/* section label */
+.section-lbl{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+
+/* footer */
+footer{
+  text-align:center;padding:30px;
+  color:var(--muted);font-size:12px;
+  font-family:'Space Mono',monospace;
+  border-top:1px solid var(--border);
+}
+
+/* scroll */
+html{scroll-behavior:smooth;}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">📡 Complete Reference Guide</div>
+  <h1>Network &amp; System<br/>Commands</h1>
+  <p>Every essential command explained — with syntax, flags, real examples, and side-by-side Windows vs Linux comparison.</p>
+  <div class="hero-pills">
+    <div class="pill pill-win">🪟 Windows (CMD / PowerShell)</div>
+    <div class="pill pill-lux">🐧 Linux / macOS (Terminal)</div>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc-wrap">
+  <div class="toc">
+    <h2>// Index</h2>
+    <div class="toc-grid">
+      <a class="toc-item" href="#p1"><div class="toc-num">01</div><div class="toc-label"><code>ping</code></div></a>
+      <a class="toc-item" href="#p2"><div class="toc-num">02</div><div class="toc-label"><code>tracert / traceroute</code></div></a>
+      <a class="toc-item" href="#p3"><div class="toc-num">03</div><div class="toc-label"><code>pathping / mtr</code></div></a>
+      <a class="toc-item" href="#p4"><div class="toc-num">04</div><div class="toc-label"><code>ipconfig / ip / ip -a</code></div></a>
+      <a class="toc-item" href="#p5"><div class="toc-num">05</div><div class="toc-label"><code>hostname</code></div></a>
+      <a class="toc-item" href="#p6"><div class="toc-num">06</div><div class="toc-label"><code>getmac / ip link</code></div></a>
+      <a class="toc-item" href="#p7"><div class="toc-num">07</div><div class="toc-label"><code>nslookup / dig</code></div></a>
+      <a class="toc-item" href="#p8"><div class="toc-num">08</div><div class="toc-label"><code>netstat / ss</code></div></a>
+      <a class="toc-item" href="#p9"><div class="toc-num">09</div><div class="toc-label"><code>arp</code></div></a>
+      <a class="toc-item" href="#p10"><div class="toc-num">10</div><div class="toc-label"><code>route</code></div></a>
+      <a class="toc-item" href="#p11"><div class="toc-num">11</div><div class="toc-label"><code>tasklist / ps / kill</code></div></a>
+      <a class="toc-item" href="#p12"><div class="toc-num">12</div><div class="toc-label"><code>systeminfo / uname -a</code></div></a>
+      <a class="toc-item" href="#p13"><div class="toc-num">13</div><div class="toc-label"><code>wmic</code></div></a>
+      <a class="toc-item" href="#p14"><div class="toc-num">14</div><div class="toc-label"><code>msinfo32</code></div></a>
+      <a class="toc-item" href="#p15"><div class="toc-num">15</div><div class="toc-label"><code>mode</code></div></a>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 01. PING -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p1">
+  <div class="card-head">
+    <div class="cmd-number">01</div>
+    <div class="cmd-title">ping</div>
+    <div class="os-badges">
+      <span class="badge badge-both">✓ Windows &amp; Linux</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>ping</strong> sends ICMP Echo Request packets to a target host and measures whether the host responds and how long it takes. It is the most fundamental tool for testing network connectivity between two devices. If you get replies, the path is clear; if you get timeouts, something is blocking or broken.</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — CMD</div>
+        <div class="os-col-body">
+<pre><span class="c"># Basic ping (sends 4 packets by default)</span>
+<span class="kw">ping</span> google.com
+<span class="kw">ping</span> <span class="ip">192.168.1.1</span>
+
+<span class="c"># Ping continuously (Ctrl+C to stop)</span>
+<span class="kw">ping</span> <span class="flag">-t</span> google.com
+
+<span class="c"># Limit to 10 packets</span>
+<span class="kw">ping</span> <span class="flag">-n 10</span> google.com
+
+<span class="c"># Set packet size to 1000 bytes</span>
+<span class="kw">ping</span> <span class="flag">-l 1000</span> google.com
+
+<span class="c"># Set TTL (Time To Live)</span>
+<span class="kw">ping</span> <span class="flag">-i 64</span> google.com
+
+<span class="c"># Example successful output:</span>
+<span class="ok">Reply from 142.250.77.46: bytes=32 time=14ms TTL=117
+Reply from 142.250.77.46: bytes=32 time=13ms TTL=117
+
+Packets: Sent=4, Received=4, Lost=0 (0% loss)</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux / macOS — Terminal</div>
+        <div class="os-col-body">
+<pre><span class="c"># Basic ping (runs forever by default)</span>
+<span class="kw">ping</span> google.com
+<span class="kw">ping</span> <span class="ip">192.168.1.1</span>
+
+<span class="c"># Limit to 5 packets</span>
+<span class="kw">ping</span> <span class="flag">-c 5</span> google.com
+
+<span class="c"># Set interval between packets (seconds)</span>
+<span class="kw">ping</span> <span class="flag">-i 2</span> google.com
+
+<span class="c"># Set packet size to 1000 bytes</span>
+<span class="kw">ping</span> <span class="flag">-s 1000</span> google.com
+
+<span class="c"># Flood ping (fast, root required)</span>
+<span class="kw">sudo ping</span> <span class="flag">-f</span> <span class="ip">192.168.1.1</span>
+
+<span class="c"># Example successful output:</span>
+<span class="ok">64 bytes from 142.250.77.46: icmp_seq=1 ttl=117 time=13.4 ms
+64 bytes from 142.250.77.46: icmp_seq=2 ttl=117 time=12.9 ms
+
+5 packets transmitted, 5 received, 0% packet loss</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <table class="opt-table">
+      <tr><th>Flag</th><th>Windows</th><th>Linux</th></tr>
+      <tr><td>Count</td><td><code class="kw">-n 5</code></td><td><code class="kw">-c 5</code></td></tr>
+      <tr><td>Continuous</td><td><code class="kw">-t</code></td><td>(default, Ctrl+C to stop)</td></tr>
+      <tr><td>Packet size</td><td><code class="kw">-l 1000</code></td><td><code class="kw">-s 1000</code></td></tr>
+      <tr><td>TTL</td><td><code class="kw">-i 64</code></td><td><code class="kw">-t 64</code></td></tr>
+      <tr><td>Interval</td><td>N/A</td><td><code class="kw">-i 2</code></td></tr>
+    </table>
+
+    <div class="use-section">
+      <div class="use-label">// Common Use Cases</div>
+      <div class="use-grid">
+        <span class="use-tag">🔍 Check if host is reachable</span>
+        <span class="use-tag">⏱ Measure latency (response time)</span>
+        <span class="use-tag">📦 Test packet loss</span>
+        <span class="use-tag">🌐 Verify DNS resolves correctly</span>
+        <span class="use-tag">🔧 Test LAN connectivity</span>
+      </div>
+    </div>
+    <div class="tip-box">
+      <span class="tip-icon">💡</span>
+      <span><strong>Reading output:</strong> <em>time=</em> is round-trip latency in ms. Under 50ms = good, 50–150ms = average, 150ms+ = high. TTL shows how many router hops remain before packet is discarded. Timeouts mean the host didn't reply (could be firewall, host down, or routing issue).</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 02. TRACERT / TRACEROUTE -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p2">
+  <div class="card-head">
+    <div class="cmd-number">02</div>
+    <div class="cmd-title">tracert &nbsp;/&nbsp; traceroute</div>
+    <div class="os-badges">
+      <span class="badge badge-win">🪟 tracert</span>
+      <span class="badge badge-lux">🐧 traceroute</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>tracert/traceroute</strong> shows the complete path (all intermediate routers/hops) that packets travel from your machine to a destination. Each hop is a router. It reveals exactly <em>where</em> in the network a failure or slowdown occurs — unlike ping which only tells you <em>if</em> the destination is reachable.</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — CMD</div>
+        <div class="os-col-body">
+<pre><span class="c"># Basic usage</span>
+<span class="kw">tracert</span> google.com
+<span class="kw">tracert</span> <span class="ip">8.8.8.8</span>
+
+<span class="c"># Skip DNS reverse lookup (faster)</span>
+<span class="kw">tracert</span> <span class="flag">-d</span> google.com
+
+<span class="c"># Set max hops (default 30)</span>
+<span class="kw">tracert</span> <span class="flag">-h 20</span> google.com
+
+<span class="c"># Set timeout per hop (ms)</span>
+<span class="kw">tracert</span> <span class="flag">-w 1000</span> google.com
+
+<span class="c"># Example output:</span>
+<span class="ok">Tracing route to google.com [142.250.77.46]
+ 1    1 ms   1 ms   1 ms  192.168.1.1      ← your router
+ 2    8 ms   9 ms   8 ms  10.0.0.1         ← ISP router
+ 3   12 ms  11 ms  13 ms  72.14.233.1
+ 4   14 ms  13 ms  14 ms  142.250.77.46    ← destination
+Trace complete.</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux — Terminal</div>
+        <div class="os-col-body">
+<pre><span class="c"># Basic usage (install if needed: sudo apt install traceroute)</span>
+<span class="kw">traceroute</span> google.com
+<span class="kw">traceroute</span> <span class="ip">8.8.8.8</span>
+
+<span class="c"># Skip DNS lookup (faster)</span>
+<span class="kw">traceroute</span> <span class="flag">-n</span> google.com
+
+<span class="c"># Set max hops</span>
+<span class="kw">traceroute</span> <span class="flag">-m 20</span> google.com
+
+<span class="c"># Use TCP SYN instead of UDP (bypasses firewalls)</span>
+<span class="kw">sudo traceroute</span> <span class="flag">-T</span> google.com
+
+<span class="c"># Use ICMP (like Windows tracert)</span>
+<span class="kw">sudo traceroute</span> <span class="flag">-I</span> google.com
+
+<span class="c"># macOS uses same command:</span>
+<span class="kw">traceroute</span> google.com</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">💡</span>
+      <span><strong>Reading output:</strong> Each row = one hop (router). Three time values = three probe packets. <code class="err">* * *</code> means that hop didn't respond (firewall, not necessarily broken). If hops suddenly spike in latency, that's where slowness is. If you see <code class="err">* * *</code> all the way to the end, the destination is unreachable.</span>
+    </div>
+
+    <div class="use-section">
+      <div class="use-label">// Common Use Cases</div>
+      <div class="use-grid">
+        <span class="use-tag">🗺 Map full route to destination</span>
+        <span class="use-tag">🐛 Find where network breaks</span>
+        <span class="use-tag">🐌 Locate slow router hops</span>
+        <span class="use-tag">🔐 Identify ISP routing path</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 03. PATHPING / MTR -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p3">
+  <div class="card-head">
+    <div class="cmd-number">03</div>
+    <div class="cmd-title">pathping &nbsp;/&nbsp; mtr</div>
+    <div class="os-badges">
+      <span class="badge badge-win">🪟 pathping</span>
+      <span class="badge badge-lux">🐧 mtr</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>pathping / mtr</strong> is the advanced, combined version of ping + traceroute. It first finds all hops, then sends many packets to each hop and reports the <em>packet loss percentage and latency</em> at every hop individually. This makes it much better than traceroute for diagnosing intermittent problems or measuring which specific router is dropping packets.</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — pathping</div>
+        <div class="os-col-body">
+<pre><span class="c"># Basic — waits ~90 sec to collect data, then shows report</span>
+<span class="kw">pathping</span> google.com
+<span class="kw">pathping</span> <span class="ip">8.8.8.8</span>
+
+<span class="c"># Skip DNS resolution (faster display)</span>
+<span class="kw">pathping</span> <span class="flag">-n</span> google.com
+
+<span class="c"># Set number of queries per hop</span>
+<span class="kw">pathping</span> <span class="flag">-q 50</span> google.com
+
+<span class="c"># Set max hops</span>
+<span class="kw">pathping</span> <span class="flag">-h 20</span> google.com
+
+<span class="c"># Example output (after collection):</span>
+<span class="ok">Hop  RTT   Source→Here  This Node/Link
+  0                           MY-PC
+                  0/100 = 0%  |
+  1    2ms       0/100 = 0%   192.168.1.1
+                  0/100 = 0%  |
+  2   14ms       0/100 = 0%   10.0.0.1
+  3    *         3/100 = 3%   ← 3% packet loss here!</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux — mtr</div>
+        <div class="os-col-body">
+<pre><span class="c"># Install: sudo apt install mtr</span>
+
+<span class="c"># Interactive real-time mode (live updating)</span>
+<span class="kw">mtr</span> google.com
+
+<span class="c"># Run as report (non-interactive, then exit)</span>
+<span class="kw">mtr</span> <span class="flag">--report</span> google.com
+<span class="kw">mtr</span> <span class="flag">-r</span> google.com
+
+<span class="c"># Set number of pings per hop</span>
+<span class="kw">mtr</span> <span class="flag">-c 100</span> google.com
+
+<span class="c"># Skip DNS, show IPs only</span>
+<span class="kw">mtr</span> <span class="flag">-n</span> google.com
+
+<span class="c"># Use TCP (port 80) instead of ICMP</span>
+<span class="kw">mtr</span> <span class="flag">--tcp -P 80</span> google.com
+
+<span class="c"># Example report output:</span>
+<span class="ok">HOST               Loss%   Snt  Avg  Best  Wrst
+1. 192.168.1.1       0.0%  100  1.1   0.8   2.3
+2. 10.0.0.1          0.0%  100  8.4   7.9  11.2
+3. 72.14.233.1        2.0%  100 13.1  12.8  18.9 ← loss!</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">💡</span>
+      <span><strong>mtr vs pathping:</strong> mtr (Linux) is interactive and updates in real-time — much more useful than pathping. It shows <em>Loss%</em> at each hop. If only the last hop shows loss but all previous hops are 0%, the destination firewall is blocking ICMP — not a real problem. Loss in middle hops = genuine network issue at that router.</span>
+    </div>
+
+    <div class="use-section">
+      <div class="use-label">// Common Use Cases</div>
+      <div class="use-grid">
+        <span class="use-tag">📉 Pinpoint packet loss at specific hop</span>
+        <span class="use-tag">📊 Measure per-hop latency over time</span>
+        <span class="use-tag">🎮 Diagnose gaming lag / jitter</span>
+        <span class="use-tag">📞 Troubleshoot VoIP call quality</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 04. IPCONFIG / IP -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p4">
+  <div class="card-head">
+    <div class="cmd-number">04</div>
+    <div class="cmd-title">ipconfig &nbsp;/&nbsp; ip &nbsp;/&nbsp; ip -a</div>
+    <div class="os-badges">
+      <span class="badge badge-win">🪟 ipconfig</span>
+      <span class="badge badge-lux">🐧 ip / ifconfig</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>ipconfig</strong> (Windows) and <strong>ip</strong> (Linux) display your network interface configuration — including IP address, subnet mask, default gateway, and MAC address. They are also used to <em>release and renew</em> DHCP leases and flush the DNS cache. These are the first commands you run when diagnosing any connectivity problem.</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — ipconfig</div>
+        <div class="os-col-body">
+<pre><span class="c"># Show basic IP info for all adapters</span>
+<span class="kw">ipconfig</span>
+
+<span class="c"># Show full details (MAC, DHCP, DNS)</span>
+<span class="kw">ipconfig</span> <span class="flag">/all</span>
+
+<span class="c"># Release DHCP lease (disconnect from DHCP)</span>
+<span class="kw">ipconfig</span> <span class="flag">/release</span>
+
+<span class="c"># Renew DHCP lease (get new IP from router)</span>
+<span class="kw">ipconfig</span> <span class="flag">/renew</span>
+
+<span class="c"># Flush DNS resolver cache</span>
+<span class="kw">ipconfig</span> <span class="flag">/flushdns</span>
+
+<span class="c"># Display DNS cache entries</span>
+<span class="kw">ipconfig</span> <span class="flag">/displaydns</span>
+
+<span class="c"># Example output of ipconfig /all:</span>
+<span class="ok">Ethernet adapter Ethernet:
+  IPv4 Address. . . . : 192.168.1.5
+  Subnet Mask . . . . : 255.255.255.0
+  Default Gateway . . : 192.168.1.1
+  DNS Servers . . . . : 8.8.8.8
+  Physical Address. . : A4-B1-C9-22-03-7F</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux — ip command</div>
+        <div class="os-col-body">
+<pre><span class="c"># Show all interfaces with IPs</span>
+<span class="kw">ip addr</span>
+<span class="kw">ip a</span>          <span class="c"># shorthand</span>
+<span class="kw">ip -a</span>         <span class="c"># same as ip addr</span>
+
+<span class="c"># Show specific interface only</span>
+<span class="kw">ip addr show eth0</span>
+
+<span class="c"># Show routing table</span>
+<span class="kw">ip route</span>
+<span class="kw">ip r</span>
+
+<span class="c"># Bring interface up / down</span>
+<span class="kw">sudo ip link set eth0 up</span>
+<span class="kw">sudo ip link set eth0 down</span>
+
+<span class="c"># OLD command (still works on most systems)</span>
+<span class="kw">ifconfig</span>
+<span class="kw">ifconfig -a</span>   <span class="c"># show all including down</span>
+
+<span class="c"># Flush/renew DHCP (using dhclient)</span>
+<span class="kw">sudo dhclient -r eth0</span>   <span class="c"># release</span>
+<span class="kw">sudo dhclient eth0</span>      <span class="c"># renew</span>
+
+<span class="c"># Flush DNS (systemd)</span>
+<span class="kw">sudo systemd-resolve --flush-caches</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="use-section">
+      <div class="use-label">// Common Use Cases</div>
+      <div class="use-grid">
+        <span class="use-tag">📍 Find your IP address</span>
+        <span class="use-tag">🔁 Renew DHCP lease</span>
+        <span class="use-tag">🧹 Fix DNS resolution issues</span>
+        <span class="use-tag">🔎 Check subnet mask &amp; gateway</span>
+        <span class="use-tag">🆔 Find MAC address</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 05. HOSTNAME -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p5">
+  <div class="card-head">
+    <div class="cmd-number">05</div>
+    <div class="cmd-title">hostname</div>
+    <div class="os-badges">
+      <span class="badge badge-both">✓ Windows &amp; Linux</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>hostname</strong> displays the name assigned to the current computer on the network. Every device on a network has a hostname which is used to identify it. On Linux, you can also change the hostname using this command or by editing system files.</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — CMD</div>
+        <div class="os-col-body">
+<pre><span class="c"># Display computer name</span>
+<span class="kw">hostname</span>
+<span class="ok">DESKTOP-ABC123</span>
+
+<span class="c"># Full info including domain</span>
+<span class="kw">wmic computersystem get DNSHostName</span>
+
+<span class="c"># To change hostname: System Properties</span>
+<span class="c"># → Right-click This PC → Properties → Rename this PC</span>
+
+<span class="c"># PowerShell: change hostname</span>
+<span class="kw">Rename-Computer</span> <span class="flag">-NewName</span> "MyNewPC" <span class="flag">-Restart</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux — Terminal</div>
+        <div class="os-col-body">
+<pre><span class="c"># Display hostname</span>
+<span class="kw">hostname</span>
+<span class="ok">ubuntu-server</span>
+
+<span class="c"># Show full hostname with domain (FQDN)</span>
+<span class="kw">hostname</span> <span class="flag">-f</span>
+
+<span class="c"># Show just the domain part</span>
+<span class="kw">hostname</span> <span class="flag">-d</span>
+
+<span class="c"># Show all IPs of this host</span>
+<span class="kw">hostname</span> <span class="flag">-I</span>
+
+<span class="c"># Change hostname temporarily (resets on reboot)</span>
+<span class="kw">sudo hostname</span> newname
+
+<span class="c"># Change hostname permanently (systemd)</span>
+<span class="kw">sudo hostnamectl set-hostname</span> newname
+
+<span class="c"># View current hostname via hostnamectl</span>
+<span class="kw">hostnamectl</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">💡</span>
+      <span>Hostnames are used in place of IP addresses internally. When you ping <code>"DESKTOP-ABC123"</code> from another PC on the same LAN, the network resolves that name to an IP automatically using NetBIOS or mDNS. Always use <code>hostnamectl</code> on modern Linux — just editing /etc/hostname alone isn't enough.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 06. GETMAC / IP LINK -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p6">
+  <div class="card-head">
+    <div class="cmd-number">06</div>
+    <div class="cmd-title">getmac &nbsp;/&nbsp; ip link</div>
+    <div class="os-badges">
+      <span class="badge badge-win">🪟 getmac</span>
+      <span class="badge badge-lux">🐧 ip link</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is">These commands retrieve the <strong>MAC address</strong> (Media Access Control address) of your network adapters. A MAC address is a unique 48-bit hardware identifier assigned to every NIC (network interface card). It is used at the data-link layer (Layer 2) for communication within the same local network. Format: <code>AA:BB:CC:DD:EE:FF</code>.</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — getmac</div>
+        <div class="os-col-body">
+<pre><span class="c"># Show MAC addresses of all adapters</span>
+<span class="kw">getmac</span>
+
+<span class="c"># Show with more detail (verbose)</span>
+<span class="kw">getmac</span> <span class="flag">/v</span>
+
+<span class="c"># Output as table with /fo table</span>
+<span class="kw">getmac</span> <span class="flag">/fo TABLE /v</span>
+
+<span class="c"># Also visible in:</span>
+<span class="kw">ipconfig /all</span>   <span class="c"># look for "Physical Address"</span>
+<span class="kw">arp -a</span>          <span class="c"># shows MAC of other devices too</span>
+
+<span class="c"># Example output:</span>
+<span class="ok">Physical Address    Transport Name
+==================  ================================================
+A4-B1-C9-22-03-7F   \Device\Tcpip_{...}</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux — ip link</div>
+        <div class="os-col-body">
+<pre><span class="c"># Show all interfaces + MAC addresses</span>
+<span class="kw">ip link</span>
+<span class="kw">ip link show</span>
+
+<span class="c"># Show specific interface</span>
+<span class="kw">ip link show eth0</span>
+
+<span class="c"># Short way — just MACs</span>
+<span class="kw">cat /sys/class/net/eth0/address</span>
+
+<span class="c"># Old command (deprecated but works)</span>
+<span class="kw">ifconfig eth0</span>    <span class="c"># look for "ether" field</span>
+
+<span class="c"># Spoof/change MAC address temporarily</span>
+<span class="kw">sudo ip link set eth0 down</span>
+<span class="kw">sudo ip link set eth0 address aa:bb:cc:dd:ee:ff</span>
+<span class="kw">sudo ip link set eth0 up</span>
+
+<span class="c"># Example output:</span>
+<span class="ok">2: eth0: &lt;BROADCAST,MULTICAST,UP&gt;
+    link/ether a4:b1:c9:22:03:7f brd ff:ff:ff:ff:ff:ff</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="use-section">
+      <div class="use-label">// Common Use Cases</div>
+      <div class="use-grid">
+        <span class="use-tag">🆔 Identify network adapter</span>
+        <span class="use-tag">🔐 Set up MAC filtering on router</span>
+        <span class="use-tag">🕵 Track devices on LAN</span>
+        <span class="use-tag">🛡 Network access control (NAC)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 07. NSLOOKUP / DIG -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p7">
+  <div class="card-head">
+    <div class="cmd-number">07</div>
+    <div class="cmd-title">nslookup &nbsp;/&nbsp; dig</div>
+    <div class="os-badges">
+      <span class="badge badge-win">🪟 nslookup</span>
+      <span class="badge badge-lux">🐧 dig / nslookup</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>nslookup</strong> and <strong>dig</strong> are DNS query tools. They let you manually query DNS servers to resolve domain names to IP addresses (and vice versa). They are essential for diagnosing DNS problems — slow websites, broken domains, checking MX records for email, and verifying DNS propagation after changes.</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — nslookup</div>
+        <div class="os-col-body">
+<pre><span class="c"># Basic lookup — domain to IP</span>
+<span class="kw">nslookup</span> google.com
+
+<span class="c"># Reverse lookup — IP to domain</span>
+<span class="kw">nslookup</span> <span class="ip">8.8.8.8</span>
+
+<span class="c"># Use a specific DNS server</span>
+<span class="kw">nslookup</span> google.com <span class="ip">8.8.8.8</span>
+
+<span class="c"># Interactive mode (type 'exit' to leave)</span>
+<span class="kw">nslookup</span>
+  &gt; google.com
+  &gt; set type=MX      ← lookup mail records
+  &gt; google.com
+  &gt; set type=NS      ← lookup name servers
+  &gt; google.com
+  &gt; exit
+
+<span class="c"># Example output:</span>
+<span class="ok">Server:  dns.google
+Address: 8.8.8.8
+
+Non-authoritative answer:
+Name:    google.com
+Address: 142.250.77.46</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux — dig (preferred)</div>
+        <div class="os-col-body">
+<pre><span class="c"># Install: sudo apt install dnsutils</span>
+
+<span class="c"># Basic lookup</span>
+<span class="kw">dig</span> google.com
+
+<span class="c"># Short answer only</span>
+<span class="kw">dig</span> google.com <span class="flag">+short</span>
+
+<span class="c"># Lookup specific record type</span>
+<span class="kw">dig</span> <span class="flag">MX</span> gmail.com        <span class="c"># mail servers</span>
+<span class="kw">dig</span> <span class="flag">NS</span> google.com       <span class="c"># name servers</span>
+<span class="kw">dig</span> <span class="flag">TXT</span> google.com      <span class="c"># text records (SPF etc)</span>
+<span class="kw">dig</span> <span class="flag">AAAA</span> google.com     <span class="c"># IPv6 address</span>
+
+<span class="c"># Use specific DNS server</span>
+<span class="kw">dig</span> @<span class="ip">8.8.8.8</span> google.com
+
+<span class="c"># Reverse lookup</span>
+<span class="kw">dig</span> <span class="flag">-x</span> <span class="ip">8.8.8.8</span>
+
+<span class="c"># Trace the full DNS resolution path</span>
+<span class="kw">dig</span> google.com <span class="flag">+trace</span>
+
+<span class="c"># nslookup also works on Linux</span>
+<span class="kw">nslookup</span> google.com</pre>
+        </div>
+      </div>
+    </div>
+
+    <table class="opt-table">
+      <tr><th>Record Type</th><th>What It Returns</th></tr>
+      <tr><td>A</td><td>IPv4 address of domain</td></tr>
+      <tr><td>AAAA</td><td>IPv6 address of domain</td></tr>
+      <tr><td>MX</td><td>Mail exchange servers</td></tr>
+      <tr><td>NS</td><td>Name servers for domain</td></tr>
+      <tr><td>TXT</td><td>Text records (SPF, DKIM, verification)</td></tr>
+      <tr><td>CNAME</td><td>Canonical name / alias</td></tr>
+      <tr><td>PTR</td><td>Reverse DNS lookup (IP → domain)</td></tr>
+    </table>
+
+    <div class="use-section">
+      <div class="use-label">// Common Use Cases</div>
+      <div class="use-grid">
+        <span class="use-tag">🌐 Diagnose DNS failures</span>
+        <span class="use-tag">📧 Check MX records for email</span>
+        <span class="use-tag">🔍 Verify DNS propagation</span>
+        <span class="use-tag">🧭 Test different DNS servers</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 08. NETSTAT / SS -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p8">
+  <div class="card-head">
+    <div class="cmd-number">08</div>
+    <div class="cmd-title">netstat &nbsp;/&nbsp; ss</div>
+    <div class="os-badges">
+      <span class="badge badge-win">🪟 netstat</span>
+      <span class="badge badge-lux">🐧 ss / netstat</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>netstat</strong> (network statistics) shows all active network connections, open ports, and protocol statistics on your machine. It tells you which ports are listening for incoming connections, which programs own those ports, and the state of all TCP connections. <strong>ss</strong> is its modern Linux replacement — faster and more detailed.</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — netstat</div>
+        <div class="os-col-body">
+<pre><span class="c"># Show all active connections</span>
+<span class="kw">netstat</span>
+
+<span class="c"># Show all connections + listening ports</span>
+<span class="kw">netstat</span> <span class="flag">-a</span>
+
+<span class="c"># Show with numeric IPs (no DNS lookup, faster)</span>
+<span class="kw">netstat</span> <span class="flag">-an</span>
+
+<span class="c"># Show which process owns each port</span>
+<span class="kw">netstat</span> <span class="flag">-b</span>       <span class="c">(run as Administrator)</span>
+
+<span class="c"># Show connections + process ID (PID)</span>
+<span class="kw">netstat</span> <span class="flag">-ano</span>
+
+<span class="c"># Show routing table</span>
+<span class="kw">netstat</span> <span class="flag">-r</span>
+
+<span class="c"># Show stats per protocol</span>
+<span class="kw">netstat</span> <span class="flag">-s</span>
+
+<span class="c"># Refresh every 3 seconds</span>
+<span class="kw">netstat</span> <span class="flag">-an 3</span>
+
+<span class="c"># Example output:</span>
+<span class="ok">Proto  Local Address     Foreign Address   State
+TCP    0.0.0.0:80        0.0.0.0:0         LISTENING
+TCP    192.168.1.5:52341 142.250.77.46:443 ESTABLISHED</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux — ss (modern)</div>
+        <div class="os-col-body">
+<pre><span class="c"># Show all sockets</span>
+<span class="kw">ss</span> <span class="flag">-a</span>
+
+<span class="c"># Show TCP connections only</span>
+<span class="kw">ss</span> <span class="flag">-t</span>
+
+<span class="c"># Show listening ports only</span>
+<span class="kw">ss</span> <span class="flag">-l</span>
+
+<span class="c"># TCP + UDP listening ports</span>
+<span class="kw">ss</span> <span class="flag">-tulnp</span>
+
+<span class="c"># Show process names owning sockets</span>
+<span class="kw">ss</span> <span class="flag">-p</span>
+
+<span class="c"># Filter by port</span>
+<span class="kw">ss</span> <span class="flag">-t</span> sport = :<span class="ip">80</span>
+<span class="kw">ss</span> <span class="flag">-t</span> dport = :<span class="ip">443</span>
+
+<span class="c"># Classic netstat (still available)</span>
+<span class="kw">netstat</span> <span class="flag">-tulnp</span>
+<span class="kw">netstat</span> <span class="flag">-an</span>
+
+<span class="c"># Example ss output:</span>
+<span class="ok">Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:Port
+tcp   LISTEN 0      128    0.0.0.0:22          0.0.0.0:*       users:(("sshd",pid=1234))
+tcp   ESTAB  0      0      192.168.1.5:52341   142.250.77.46:443</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <table class="opt-table">
+      <tr><th>Connection State</th><th>Meaning</th></tr>
+      <tr><td>LISTENING</td><td>Port is open and waiting for incoming connections</td></tr>
+      <tr><td>ESTABLISHED</td><td>Active connection currently in use</td></tr>
+      <tr><td>TIME_WAIT</td><td>Connection is closing, waiting for packets in transit</td></tr>
+      <tr><td>CLOSE_WAIT</td><td>Remote end closed connection, local end hasn't yet</td></tr>
+      <tr><td>SYN_SENT</td><td>Trying to establish a connection</td></tr>
+    </table>
+
+    <div class="use-section">
+      <div class="use-label">// Common Use Cases</div>
+      <div class="use-grid">
+        <span class="use-tag">🔒 Check what ports are open</span>
+        <span class="use-tag">🦠 Detect suspicious connections</span>
+        <span class="use-tag">🔎 Find what app is using a port</span>
+        <span class="use-tag">📊 Monitor active connections</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 09. ARP -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p9">
+  <div class="card-head">
+    <div class="cmd-number">09</div>
+    <div class="cmd-title">arp</div>
+    <div class="os-badges">
+      <span class="badge badge-both">✓ Windows &amp; Linux</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>ARP</strong> (Address Resolution Protocol) maps IP addresses to MAC addresses within a local network. When your PC needs to talk to <code>192.168.1.5</code>, it broadcasts "Who has this IP?" and the device replies with its MAC. The <code>arp</code> command lets you view and manipulate this ARP table (also called ARP cache).</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — arp</div>
+        <div class="os-col-body">
+<pre><span class="c"># Display full ARP table</span>
+<span class="kw">arp -a</span>
+
+<span class="c"># Show ARP table for specific interface</span>
+<span class="kw">arp -a</span> <span class="flag">-N 192.168.1.5</span>
+
+<span class="c"># Delete a specific ARP entry</span>
+<span class="kw">arp -d</span> <span class="ip">192.168.1.10</span>
+
+<span class="c"># Add static ARP entry</span>
+<span class="kw">arp -s</span> <span class="ip">192.168.1.10</span> <span class="ip">AA-BB-CC-DD-EE-FF</span>
+
+<span class="c"># Example output:</span>
+<span class="ok">Interface: 192.168.1.5 --- 0x4
+  Internet Address    Physical Address    Type
+  192.168.1.1         a4-b1-c9-00-00-01   dynamic   ← your router
+  192.168.1.10        00-1a-2b-3c-4d-5e   dynamic
+  192.168.1.255       ff-ff-ff-ff-ff-ff   static    ← broadcast</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux — arp / ip neigh</div>
+        <div class="os-col-body">
+<pre><span class="c"># Display ARP table (old way)</span>
+<span class="kw">arp -a</span>
+<span class="kw">arp -n</span>    <span class="c"># numeric, no DNS lookup</span>
+
+<span class="c"># Modern way — ip neighbour</span>
+<span class="kw">ip neigh</span>
+<span class="kw">ip neigh show</span>
+
+<span class="c"># Delete ARP entry</span>
+<span class="kw">sudo arp -d</span> <span class="ip">192.168.1.10</span>
+
+<span class="c"># Add static ARP entry</span>
+<span class="kw">sudo arp -s</span> <span class="ip">192.168.1.10</span> <span class="ip">AA:BB:CC:DD:EE:FF</span>
+
+<span class="c"># Flush entire ARP cache</span>
+<span class="kw">sudo ip neigh flush all</span>
+
+<span class="c"># Example ip neigh output:</span>
+<span class="ok">192.168.1.1 dev eth0 lladdr a4:b1:c9:00:00:01 REACHABLE
+192.168.1.10 dev eth0 lladdr 00:1a:2b:3c:4d:5e STALE</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">💡</span>
+      <span><strong>ARP Poisoning / Spoofing</strong> is a cyberattack where a malicious device sends fake ARP replies to redirect traffic through itself (man-in-the-middle). If you see duplicate IPs or unexpected MACs in your ARP table, this could be happening. Static ARP entries are immune to poisoning.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 10. ROUTE -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p10">
+  <div class="card-head">
+    <div class="cmd-number">10</div>
+    <div class="cmd-title">route</div>
+    <div class="os-badges">
+      <span class="badge badge-both">✓ Windows &amp; Linux</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>route</strong> displays and manipulates the IP routing table on your machine. The routing table tells your OS where to send packets based on their destination IP. Every PC has a routing table — at minimum it has a default gateway entry (where to send everything it doesn't know locally).</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — route</div>
+        <div class="os-col-body">
+<pre><span class="c"># Display routing table</span>
+<span class="kw">route print</span>
+<span class="kw">netstat -r</span>    <span class="c"># same output</span>
+
+<span class="c"># Add a static route</span>
+<span class="c"># (send traffic to 10.x.x.x via 192.168.1.254)</span>
+<span class="kw">route add</span> <span class="ip">10.0.0.0</span> mask <span class="ip">255.0.0.0</span> <span class="ip">192.168.1.254</span>
+
+<span class="c"># Make route persistent (survives reboot)</span>
+<span class="kw">route add</span> <span class="ip">10.0.0.0</span> mask <span class="ip">255.0.0.0</span> <span class="ip">192.168.1.254</span> <span class="flag">-p</span>
+
+<span class="c"># Delete a route</span>
+<span class="kw">route delete</span> <span class="ip">10.0.0.0</span>
+
+<span class="c"># Change default gateway</span>
+<span class="kw">route change</span> <span class="ip">0.0.0.0</span> mask <span class="ip">0.0.0.0</span> <span class="ip">192.168.1.1</span>
+
+<span class="c"># Example routing table:</span>
+<span class="ok">Network Dest    Netmask         Gateway         Interface
+0.0.0.0         0.0.0.0         192.168.1.1     192.168.1.5   ← default gateway
+127.0.0.0       255.0.0.0       On-link         127.0.0.1     ← loopback
+192.168.1.0     255.255.255.0   On-link         192.168.1.5   ← local LAN</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux — ip route / route</div>
+        <div class="os-col-body">
+<pre><span class="c"># Display routing table (modern)</span>
+<span class="kw">ip route</span>
+<span class="kw">ip route show</span>
+
+<span class="c"># Old command (still works)</span>
+<span class="kw">route -n</span>      <span class="c"># -n = numeric, no DNS</span>
+
+<span class="c"># Add a static route</span>
+<span class="kw">sudo ip route add</span> <span class="ip">10.0.0.0/8</span> via <span class="ip">192.168.1.254</span>
+
+<span class="c"># Delete a route</span>
+<span class="kw">sudo ip route del</span> <span class="ip">10.0.0.0/8</span>
+
+<span class="c"># Change default gateway</span>
+<span class="kw">sudo ip route add default</span> via <span class="ip">192.168.1.1</span>
+
+<span class="c"># See which route a specific IP will take</span>
+<span class="kw">ip route get</span> <span class="ip">8.8.8.8</span>
+
+<span class="c"># Example output:</span>
+<span class="ok">default via 192.168.1.1 dev eth0 proto dhcp
+192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.5</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="use-section">
+      <div class="use-label">// Common Use Cases</div>
+      <div class="use-grid">
+        <span class="use-tag">🗺 View routing table</span>
+        <span class="use-tag">🔀 Add static routes for VPN</span>
+        <span class="use-tag">🌐 Configure multi-gateway setups</span>
+        <span class="use-tag">🔧 Fix "no route to host" errors</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 11. TASKLIST / TASKKILL / PS / KILL -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p11">
+  <div class="card-head">
+    <div class="cmd-number">11</div>
+    <div class="cmd-title">tasklist / taskkill &nbsp;&nbsp;|&nbsp;&nbsp; ps aurx / kill</div>
+    <div class="os-badges">
+      <span class="badge badge-win">🪟 tasklist / taskkill</span>
+      <span class="badge badge-lux">🐧 ps / kill</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is">These commands list running processes and terminate them. <strong>tasklist</strong> (Windows) / <strong>ps</strong> (Linux) show all currently running processes with their Process ID (PID), CPU, memory usage, and the user running them. <strong>taskkill</strong> / <strong>kill</strong> are used to terminate a process by name or PID — essential for killing frozen apps or suspicious processes.</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — tasklist / taskkill</div>
+        <div class="os-col-body">
+<pre><span class="c"># List all running processes</span>
+<span class="kw">tasklist</span>
+
+<span class="c"># Show services tied to each process</span>
+<span class="kw">tasklist</span> <span class="flag">/svc</span>
+
+<span class="c"># Filter by process name</span>
+<span class="kw">tasklist</span> <span class="flag">/fi</span> "imagename eq chrome.exe"
+
+<span class="c"># Show processes by memory usage (PowerShell)</span>
+<span class="kw">Get-Process | Sort-Object</span> <span class="flag">WorkingSet</span> <span class="flag">-Descending</span>
+
+<span class="c"># Kill process by name</span>
+<span class="kw">taskkill</span> <span class="flag">/IM</span> notepad.exe
+
+<span class="c"># Kill by name (force)</span>
+<span class="kw">taskkill</span> <span class="flag">/IM</span> notepad.exe <span class="flag">/F</span>
+
+<span class="c"># Kill by PID</span>
+<span class="kw">taskkill</span> <span class="flag">/PID</span> 4512 <span class="flag">/F</span>
+
+<span class="c"># Kill all child processes too</span>
+<span class="kw">taskkill</span> <span class="flag">/PID</span> 4512 <span class="flag">/F /T</span>
+
+<span class="c"># Example output:</span>
+<span class="ok">Image Name       PID    Session   Mem Usage
+chrome.exe       4512   Console   250,456 K
+notepad.exe      1024   Console     8,244 K
+svchost.exe       688   Services   14,352 K</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux — ps / kill</div>
+        <div class="os-col-body">
+<pre><span class="c"># Show processes for current user</span>
+<span class="kw">ps</span>
+
+<span class="c"># Show ALL processes (most common)</span>
+<span class="kw">ps aux</span>
+<span class="kw">ps aurx</span>    <span class="c"># similar with tty, sorted</span>
+
+<span class="c"># Show process tree (parent/child)</span>
+<span class="kw">ps</span> <span class="flag">auxf</span>
+
+<span class="c"># Live process monitor (like Task Manager)</span>
+<span class="kw">top</span>
+<span class="kw">htop</span>    <span class="c"># prettier, install: sudo apt install htop</span>
+
+<span class="c"># Search for a specific process</span>
+<span class="kw">ps aux |</span> <span class="kw">grep</span> firefox
+
+<span class="c"># Kill by PID (sends SIGTERM — graceful)</span>
+<span class="kw">kill</span> 4512
+
+<span class="c"># Force kill (sends SIGKILL — immediate)</span>
+<span class="kw">kill -9</span> 4512
+<span class="kw">kill -KILL</span> 4512
+
+<span class="c"># Kill by process name (easier)</span>
+<span class="kw">killall</span> firefox
+<span class="kw">pkill</span> firefox
+
+<span class="c"># Example ps aux output:</span>
+<span class="ok">USER   PID  %CPU %MEM    VSZ   RSS  COMMAND
+root     1   0.0  0.1  22560  1800  /sbin/init
+user  4512   2.1  5.3 880432 54000  /usr/bin/firefox</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <table class="opt-table">
+      <tr><th>Linux Signal</th><th>Number</th><th>Effect</th></tr>
+      <tr><td>SIGTERM</td><td>15 (default)</td><td>Politely ask process to terminate</td></tr>
+      <tr><td>SIGKILL</td><td>9</td><td>Force kill immediately, no cleanup</td></tr>
+      <tr><td>SIGHUP</td><td>1</td><td>Reload config (daemons/services)</td></tr>
+      <tr><td>SIGSTOP</td><td>19</td><td>Pause (suspend) the process</td></tr>
+      <tr><td>SIGCONT</td><td>18</td><td>Resume a stopped process</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 12. SYSTEMINFO / UNAME -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p12">
+  <div class="card-head">
+    <div class="cmd-number">12</div>
+    <div class="cmd-title">systeminfo &nbsp;/&nbsp; uname -a</div>
+    <div class="os-badges">
+      <span class="badge badge-win">🪟 systeminfo</span>
+      <span class="badge badge-lux">🐧 uname / lshw</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>systeminfo</strong> (Windows) and <strong>uname</strong> (Linux) display detailed system information including OS version, kernel, hostname, CPU architecture, RAM, uptime, and installed hotfixes. Essential for documentation, troubleshooting compatibility issues, or auditing a system you don't know well.</p>
+
+    <div class="os-grid">
+      <div class="os-col">
+        <div class="os-col-head win-head">🪟 Windows — systeminfo</div>
+        <div class="os-col-body">
+<pre><span class="c"># Show all system information</span>
+<span class="kw">systeminfo</span>
+
+<span class="c"># Save output to text file</span>
+<span class="kw">systeminfo</span> &gt; info.txt
+
+<span class="c"># Remote system info</span>
+<span class="kw">systeminfo</span> <span class="flag">/S</span> RemotePC <span class="flag">/U</span> admin <span class="flag">/P</span> password
+
+<span class="c"># Filter for specific line (PowerShell)</span>
+<span class="kw">systeminfo</span> | <span class="kw">findstr</span> "OS Name"
+<span class="kw">systeminfo</span> | <span class="kw">findstr</span> "Total Physical Memory"
+<span class="kw">systeminfo</span> | <span class="kw">findstr</span> "Hotfix"
+
+<span class="c"># Example output:</span>
+<span class="ok">OS Name:     Microsoft Windows 11 Pro
+OS Version:  10.0.22621 N/A Build 22621
+System Type: x64-based PC
+Total Physical Memory: 16,384 MB
+Available Physical Memory: 8,112 MB
+Hotfix(s):   5 Hotfix(s) Installed.</span></pre>
+        </div>
+      </div>
+      <div class="os-col">
+        <div class="os-col-head lux-head">🐧 Linux — uname &amp; others</div>
+        <div class="os-col-body">
+<pre><span class="c"># Show all system info (all flags)</span>
+<span class="kw">uname -a</span>
+
+<span class="c"># Individual flags:</span>
+<span class="kw">uname -s</span>   <span class="c"># kernel name (Linux)</span>
+<span class="kw">uname -r</span>   <span class="c"># kernel release (6.1.0-...)</span>
+<span class="kw">uname -v</span>   <span class="c"># kernel build version</span>
+<span class="kw">uname -m</span>   <span class="c"># machine arch (x86_64, arm64)</span>
+<span class="kw">uname -n</span>   <span class="c"># hostname</span>
+<span class="kw">uname -o</span>   <span class="c"># OS name (GNU/Linux)</span>
+
+<span class="c"># Full OS info</span>
+<span class="kw">cat /etc/os-release</span>
+<span class="kw">lsb_release -a</span>
+
+<span class="c"># CPU info</span>
+<span class="kw">lscpu</span>
+<span class="kw">cat /proc/cpuinfo</span>
+
+<span class="c"># Memory info</span>
+<span class="kw">free -h</span>
+<span class="kw">cat /proc/meminfo</span>
+
+<span class="c"># Full hardware listing</span>
+<span class="kw">sudo lshw -short</span>
+
+<span class="c"># System uptime</span>
+<span class="kw">uptime</span>
+
+<span class="c"># Example uname -a output:</span>
+<span class="ok">Linux ubuntu-pc 6.1.0-21-amd64 #1 SMP x86_64 GNU/Linux</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="use-section">
+      <div class="use-label">// Common Use Cases</div>
+      <div class="use-grid">
+        <span class="use-tag">📋 Audit system specs</span>
+        <span class="use-tag">🔄 Check installed hotfixes/patches</span>
+        <span class="use-tag">🖥 Check 32-bit vs 64-bit</span>
+        <span class="use-tag">📡 Get kernel version for compatibility</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 13. WMIC -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p13">
+  <div class="card-head">
+    <div class="cmd-number">13</div>
+    <div class="cmd-title">wmic</div>
+    <div class="os-badges">
+      <span class="badge badge-win">🪟 Windows Only</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>WMIC</strong> (Windows Management Instrumentation Command-line) is a powerful interface to the Windows WMI framework. It lets you query nearly everything about a Windows system — hardware, software, processes, services, users, network adapters, BIOS — directly from CMD without opening any GUI. It's scriptable and can query remote machines.</p>
+
+    <div class="os-col" style="border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:16px;">
+      <div class="os-col-head win-head">🪟 Windows — wmic Commands</div>
+      <div class="os-col-body">
+<pre><span class="c">── SYSTEM INFO ──────────────────────────────────</span>
+<span class="kw">wmic computersystem get</span> model,manufacturer,name
+<span class="kw">wmic bios get</span> serialnumber,version
+<span class="kw">wmic os get</span> caption,version,buildnumber
+
+<span class="c">── CPU ──────────────────────────────────────────</span>
+<span class="kw">wmic cpu get</span> name,numberofcores,maxclockspeed
+
+<span class="c">── MEMORY (RAM) ─────────────────────────────────</span>
+<span class="kw">wmic memorychip get</span> capacity,speed,manufacturer
+<span class="kw">wmic OS get</span> TotalVisibleMemorySize,FreePhysicalMemory
+
+<span class="c">── DISK ─────────────────────────────────────────</span>
+<span class="kw">wmic diskdrive get</span> model,size,status
+<span class="kw">wmic logicaldisk get</span> name,freespace,size
+
+<span class="c">── NETWORK ──────────────────────────────────────</span>
+<span class="kw">wmic nic get</span> name,macaddress,speed
+<span class="kw">wmic nicconfig where</span> IPEnabled=True <span class="kw">get</span> IPAddress,MACAddress
+
+<span class="c">── PROCESSES ────────────────────────────────────</span>
+<span class="kw">wmic process list brief</span>
+<span class="kw">wmic process where</span> name='chrome.exe' <span class="kw">get</span> processid,workingsetsize
+<span class="kw">wmic process where</span> processid=4512 <span class="kw">call terminate</span>
+
+<span class="c">── SOFTWARE ─────────────────────────────────────</span>
+<span class="kw">wmic product get</span> name,version,installdate
+
+<span class="c">── STARTUP PROGRAMS ─────────────────────────────</span>
+<span class="kw">wmic startup get</span> caption,command
+
+<span class="c">── OUTPUT FORMATS ───────────────────────────────</span>
+<span class="kw">wmic cpu get name /format:csv</span>     <span class="c"># CSV format</span>
+<span class="kw">wmic cpu get name /format:list</span>    <span class="c"># list format</span>
+<span class="kw">wmic cpu get name</span> &gt; cpu.txt      <span class="c"># save to file</span>
+
+<span class="c">── REMOTE MACHINE ───────────────────────────────</span>
+<span class="kw">wmic /node:</span><span class="ip">192.168.1.10</span> cpu get name</pre>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">⚠️</span>
+      <span><strong>Note:</strong> WMIC is deprecated in Windows 11 (still works, but may be removed in future versions). Microsoft recommends using <strong>PowerShell Get-WmiObject</strong> or <strong>Get-CimInstance</strong> as replacements. Example: <code>Get-CimInstance Win32_Processor | Select Name, NumberOfCores</code></span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 14. MSINFO32 -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p14">
+  <div class="card-head">
+    <div class="cmd-number">14</div>
+    <div class="cmd-title">msinfo32</div>
+    <div class="os-badges">
+      <span class="badge badge-win">🪟 Windows Only</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>msinfo32</strong> opens the <em>System Information</em> GUI tool in Windows. It provides an extensive, well-organized view of your entire system configuration — hardware resources, components (display, storage, input), software environment (drivers, running tasks, startup programs, services, print jobs, network connections). It's like systeminfo but with a graphical interface and more detail.</p>
+
+    <div class="os-col" style="border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:16px;">
+      <div class="os-col-head win-head">🪟 How to Use msinfo32</div>
+      <div class="os-col-body">
+<pre><span class="c"># Open System Information GUI</span>
+<span class="kw">msinfo32</span>
+
+<span class="c"># Open directly to a specific category</span>
+<span class="kw">msinfo32</span> <span class="flag">/categories</span> +systemsummary
+
+<span class="c"># Export full report to a text file</span>
+<span class="kw">msinfo32</span> <span class="flag">/report</span> C:\sysreport.txt
+
+<span class="c"># Export as NFO file (can be reopened in msinfo32)</span>
+<span class="kw">msinfo32</span> <span class="flag">/nfo</span> C:\sysreport.nfo
+
+<span class="c"># Connect to remote computer</span>
+<span class="kw">msinfo32</span> <span class="flag">/computer</span> REMOTE-PC-NAME</pre>
+      </div>
+    </div>
+
+    <div class="section-lbl">// What you can see in msinfo32</div>
+    <table class="opt-table">
+      <tr><th>Section</th><th>What it shows</th></tr>
+      <tr><td>System Summary</td><td>OS, BIOS, processor, RAM, page file, hostname, timezone</td></tr>
+      <tr><td>Hardware Resources</td><td>IRQs, DMA, memory map, I/O ports, conflicts</td></tr>
+      <tr><td>Components</td><td>Display, sound, storage, USB, network adapters, CD/DVD</td></tr>
+      <tr><td>Software Environment</td><td>Drivers, services, startup programs, running tasks, environment variables, network connections, print jobs</td></tr>
+    </table>
+
+    <div class="tip-box">
+      <span class="tip-icon">💡</span>
+      <span>msinfo32 is often the best first tool to check on an unfamiliar Windows PC. Use <strong>Edit → Find</strong> inside the tool to search for specific hardware or software names. Use <strong>File → Export</strong> to save a full report and send to IT support.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- 15. MODE -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="cmd-card" id="p15">
+  <div class="card-head">
+    <div class="cmd-number">15</div>
+    <div class="cmd-title">mode</div>
+    <div class="os-badges">
+      <span class="badge badge-win">🪟 Windows Only</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="what-is"><strong>mode</strong> is a Windows CMD utility that configures and displays the settings of devices — primarily the <em>console/terminal window</em> (size, lines, columns) and <em>serial communication (COM) ports</em> (baud rate, parity, stop bits). It's used for terminal display configuration, printer port settings, and serial device communication setup.</p>
+
+    <div class="os-col" style="border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:16px;">
+      <div class="os-col-head win-head">🪟 Windows — mode Commands</div>
+      <div class="os-col-body">
+<pre><span class="c">── CONSOLE / TERMINAL WINDOW ────────────────────</span>
+
+<span class="c"># Show current console status</span>
+<span class="kw">mode</span>
+<span class="kw">mode con</span>
+
+<span class="c"># Resize terminal: 80 columns wide, 40 lines tall</span>
+<span class="kw">mode con cols=80 lines=40</span>
+<span class="kw">mode con cols=120 lines=50</span>    <span class="c"># wider terminal</span>
+
+<span class="c"># Example output:</span>
+<span class="ok">Status for device CON:
+  Lines:          25
+  Columns:        80
+  Keyboard rate:  31
+  Keyboard delay: 1
+  Code page:      437</span>
+
+<span class="c">── SERIAL (COM) PORTS ───────────────────────────</span>
+
+<span class="c"># Configure COM1 port settings</span>
+<span class="kw">mode com1</span>                     <span class="c"># show current settings</span>
+<span class="kw">mode com1 baud=9600 parity=n data=8 stop=1</span>
+
+<span class="c"># Common serial parameters:</span>
+<span class="c">#   baud  = 110, 300, 600, 1200, 2400, 4800, 9600, 19200, 115200</span>
+<span class="c">#   parity= n(none), e(even), o(odd), m(mark), s(space)</span>
+<span class="c">#   data  = 5, 6, 7, 8 (data bits per byte)</span>
+<span class="c">#   stop  = 1, 1.5, 2 (stop bits)</span>
+
+<span class="c">── LPT PRINTER PORTS ────────────────────────────</span>
+<span class="kw">mode lpt1</span>                     <span class="c"># show printer port settings</span>
+<span class="kw">mode lpt1 cols=80 lines=66 retry=e</span>
+
+<span class="c">── CODE PAGE (character encoding) ───────────────</span>
+<span class="kw">mode con cp select=65001</span>      <span class="c"># switch terminal to UTF-8</span>
+<span class="c"># (same as: chcp 65001)</span></pre>
+      </div>
+    </div>
+
+    <table class="opt-table">
+      <tr><th>Use Case</th><th>Command</th></tr>
+      <tr><td>Make terminal wider</td><td><code>mode con cols=120 lines=50</code></td></tr>
+      <tr><td>Setup Arduino/serial device</td><td><code>mode com3 baud=115200 parity=n data=8 stop=1</code></td></tr>
+      <tr><td>Enable UTF-8 in CMD</td><td><code>mode con cp select=65001</code></td></tr>
+      <tr><td>Check COM port settings</td><td><code>mode com1</code></td></tr>
+    </table>
+
+    <div class="tip-box">
+      <span class="tip-icon">💡</span>
+      <span>The <code>mode</code> command is very useful when working with <strong>microcontrollers</strong> (Arduino, Raspberry Pi Pico) or <strong>legacy serial devices</strong> via COM ports. The terminal resize feature is handy in scripts where you need a specific window size before running a full-screen terminal UI.</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<footer>
+  Network &amp; System Commands Reference &nbsp;·&nbsp; Windows + Linux &nbsp;·&nbsp; Complete Guide
+</footer>
+
+</body>
+</html>
